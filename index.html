@@ -34,6 +34,13 @@
             </svg>
         );
 
+        const InstallIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+              <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
+              <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+            </svg>
+        );
+
         const ChevronDownIcon = ({ isOpen }) => (
             <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -397,8 +404,53 @@
             const [error, setError] = useState(null);
             const [isExportModalOpen, setIsExportModalOpen] = useState(false);
             const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
             const fileInputRef = useRef(null);
 
+            useEffect(() => {
+                // Service Worker Registration
+                if ('serviceWorker' in navigator) {
+                    const swCode = `
+                        const CACHE_NAME = 'pain-data-manager-cache-v1';
+                        const urlsToCache = ['./', './index.html', './cropped.png'];
+
+                        self.addEventListener('install', (event) => {
+                            event.waitUntil(
+                                caches.open(CACHE_NAME).then((cache) => {
+                                    return cache.addAll(urlsToCache);
+                                })
+                            );
+                        });
+
+                        self.addEventListener('fetch', (event) => {
+                            event.respondWith(
+                                caches.match(event.request).then((response) => {
+                                    return response || fetch(event.request);
+                                })
+                            );
+                        });
+                    `;
+                    const blob = new Blob([swCode], { type: 'application/javascript' });
+                    const swUrl = URL.createObjectURL(blob);
+
+                    navigator.serviceWorker.register(swUrl)
+                        .then((reg) => console.log('Service Worker registered.'))
+                        .catch((err) => console.log('Service Worker registration failed:', err));
+                }
+                
+                // Install prompt logic
+                const handleBeforeInstallPrompt = (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                };
+
+                window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+                return () => {
+                    window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+                };
+            }, []);
+            
             useEffect(() => {
                 try {
                     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allPatientData));
@@ -407,6 +459,18 @@
                     setError("Could not save data. Your browser's storage might be full.");
                 }
             }, [allPatientData]);
+            
+            const handleInstallClick = async () => {
+                if (!deferredPrompt) {
+                    return;
+                }
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                setDeferredPrompt(null);
+            };
 
             const handleFileImport = async (event) => {
                 const file = event.target.files?.[0];
@@ -490,7 +554,7 @@
                     <div className="max-w-md mx-auto p-4">
                         <header className="py-4">
                             <h1 className="text-3xl font-bold text-center text-indigo-400 mb-4">Pain Data Manager</h1>
-                            <div className="flex justify-center space-x-2">
+                            <div className="flex justify-center space-x-2 flex-wrap gap-2">
                                 <button
                                     onClick={triggerFileInput}
                                     className="flex items-center justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
@@ -524,6 +588,16 @@
                                     <TrashIcon />
                                     <span className="ml-2 hidden sm:inline">Clear All</span>
                                 </button>
+                                {deferredPrompt && (
+                                    <button
+                                        onClick={handleInstallClick}
+                                        className="flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
+                                        aria-label="Install application"
+                                    >
+                                        <InstallIcon />
+                                        <span className="ml-2 hidden sm:inline">Install App</span>
+                                    </button>
+                                )}
                             </div>
                         </header>
 
