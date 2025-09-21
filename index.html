@@ -294,6 +294,19 @@
 
         const PatientAccordion = ({ patient, onUpdate }) => {
             const [isOpen, setIsOpen] = React.useState(false);
+            const accordionRef = React.useRef(null);
+
+            React.useEffect(() => {
+                if (isOpen) {
+                    const timer = setTimeout(() => {
+                        accordionRef.current?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                        });
+                    }, 150);
+                    return () => clearTimeout(timer);
+                }
+            }, [isOpen]);
 
             const handleInputChange = (e) => {
                 const { name, value } = e.target;
@@ -334,7 +347,7 @@
             }, [patient.name, patient.age, patient.weight, patient.height]);
 
             return (
-                <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden">
+                <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden" ref={accordionRef}>
                     <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="w-full flex justify-between items-center p-4 text-left hover:bg-[#255356] focus:outline-none focus:bg-[#255356]"
