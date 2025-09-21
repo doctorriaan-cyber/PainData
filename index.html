@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pain Data Manager</title>
     <meta name="description" content="An application to import, view, edit, and export patient data from an XLSX file, designed for mobile use." />
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiUGFpbiBEYXRhIE1hbmFnZXIiLCJzaG9ydF9uYW1lIjoiUGFpbiBEYXRhIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxMTE4MjciLCJ0aGVtZV9jb2xvciI6IiM0ZjQ2ZTUiLCJkZXNjcmlwdGlvbiI6IkFuIGFwcGxpY2F0aW9uIHRvIGltcG9ydCwgdmlldywgZWRpdCwgYW5kIGV4cG9ydCBwYXRpZW50IGRhdGEuIiwiaWNvbnMiOlt7InNyYyI6ImNyb3BwZWQucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19" />
-    <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiUGFpbiBEYXRhIE1hbmFnZXIiLCJzaG9ydF9uYW1lIjoiUGFpbiBEYXRhIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxMjMxMzMiLCJ0aGVtZV9jb2xvciI6IiMxMjMxMzMiLCJkZXNjcmlwdGlvbiI6IkFuIGFwcGxpY2F0aW9uIHRvIGltcG9ydCwgdmlldywgZWRpdCwgYW5kIGV4cG9ydCBwYXRpZW50IGRhdGEuIiwiaWNvbnMiOlt7InNyYyI6ImNyb3BwZWQucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19" />
+    <meta name="theme-color" content="#123133" />
     <link rel="apple-touch-icon" href="cropped.png" />
     
     <!-- CDNs -->
@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gray-900">
+<body class="bg-[#123133]">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -197,24 +197,24 @@
                     onClick={onClose}
                 >
                     <div 
-                        className="bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm border border-gray-700 text-center"
+                        className="bg-[#184144] rounded-lg shadow-2xl w-full max-w-sm border border-[#255356] text-center"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="p-6">
                             <WarningIcon />
-                            <h2 className="text-xl font-bold text-red-400 mb-2">{title}</h2>
-                            <p className="text-gray-300">{message}</p>
+                            <h2 className="text-xl font-bold text-[#F56565] mb-2">{title}</h2>
+                            <p className="text-[#B8C0C1]">{message}</p>
                         </div>
-                        <div className="p-4 bg-gray-900/50 flex justify-center space-x-4 rounded-b-lg">
+                        <div className="p-4 bg-[#123133]/50 flex justify-center space-x-4 rounded-b-lg">
                              <button
                                 onClick={onClose}
-                                className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg w-full"
+                                className="px-6 py-2 bg-[#4a6566] hover:bg-[#3e5556] text-white font-semibold rounded-lg w-full"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={onConfirm}
-                                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg w-full"
+                                className="px-6 py-2 bg-[#E53E3E] hover:bg-[#C53030] text-white font-semibold rounded-lg w-full"
                             >
                                 Confirm
                             </button>
@@ -234,33 +234,33 @@
                     onClick={onClose}
                 >
                     <div 
-                        className="bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm border border-gray-700"
+                        className="bg-[#184144] rounded-lg shadow-2xl w-full max-w-sm border border-[#255356]"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="flex justify-between items-center p-4 border-b border-gray-600">
-                            <h2 className="text-xl font-bold text-indigo-300">Select Section to Export</h2>
-                            <button onClick={onClose} className="text-gray-400 hover:text-white">
+                        <div className="flex justify-between items-center p-4 border-b border-[#35686b]">
+                            <h2 className="text-xl font-bold text-[#EAEFF0]">Select Section to Export</h2>
+                            <button onClick={onClose} className="text-[#B8C0C1] hover:text-[#EAEFF0]">
                                 <CloseIcon />
                             </button>
                         </div>
                         <div className="p-4 max-h-80 overflow-y-auto">
-                            <p className="text-gray-300 mb-4">Choose which imported file you would like to export.</p>
+                            <p className="text-[#B8C0C1] mb-4">Choose which imported file you would like to export.</p>
                             <div className="space-y-3">
                                 {sections.map((section, index) => (
                                     <button
                                         key={`${section.sectionHeader}-${index}`}
                                         onClick={() => onSelect(section)}
-                                        className="w-full text-left px-4 py-3 bg-gray-700 hover:bg-indigo-600 rounded-md transition-colors duration-200"
+                                        className="w-full text-left px-4 py-3 bg-[#255356] hover:bg-[#246364] text-[#EAEFF0] rounded-md transition-colors duration-200"
                                     >
                                         {section.sectionHeader}
                                     </button>
                                 ))}
                             </div>
                         </div>
-                        <div className="p-4 border-t border-gray-600 text-right">
+                        <div className="p-4 border-t border-[#35686b] text-right">
                              <button
                                 onClick={onClose}
-                                className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg"
+                                className="px-4 py-2 bg-[#4a6566] hover:bg-[#3e5556] text-white font-semibold rounded-lg"
                             >
                                 Cancel
                             </button>
@@ -273,14 +273,14 @@
         // --- From components/PatientAccordion.tsx ---
         const InputField = ({ label, name, value, onChange }) => (
             <div>
-                <label htmlFor={name} className="block text-sm font-medium text-gray-300 mb-1">{label}</label>
+                <label htmlFor={name} className="block text-sm font-medium text-[#B8C0C1] mb-1">{label}</label>
                 <input
                     type="text"
                     id={name}
                     name={name}
                     value={value}
                     onChange={onChange}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]"
                 />
             </div>
         );
@@ -327,26 +327,26 @@
             }, [patient.name, patient.age, patient.weight, patient.height]);
 
             return (
-                <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden">
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="w-full flex justify-between items-center p-4 text-left hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+                        className="w-full flex justify-between items-center p-4 text-left hover:bg-[#255356] focus:outline-none focus:bg-[#255356]"
                         aria-expanded={isOpen}
                     >
                         <div className="flex items-center min-w-0">
                              <span
-                                className={`w-3 h-3 rounded-full mr-3 flex-shrink-0 self-start mt-2 ${isComplete ? 'bg-green-500' : 'bg-red-500'}`}
+                                className={`w-3 h-3 rounded-full mr-3 flex-shrink-0 self-start mt-2 ${isComplete ? 'bg-[#48BB78]' : 'bg-[#F56565]'}`}
                                 title={isComplete ? 'All fields complete' : 'Missing required data'}
                             ></span>
                             <div className="flex flex-col min-w-0">
-                                <span className="truncate font-semibold text-lg text-indigo-300" title={name}>{name}</span>
+                                <span className="truncate font-semibold text-lg text-[#EAEFF0]" title={name}>{name}</span>
                                 {(age || bmi) && (
-                                    <span className="text-sm text-gray-400">
+                                    <span className="text-sm text-[#B8C0C1]">
                                         {age}{age && bmi ? ', ' : ''}{bmi}
                                     </span>
                                 )}
                                 {patient.procedure && (
-                                    <span className="text-sm text-gray-400 mt-1 truncate" title={patient.procedure}>
+                                    <span className="text-sm text-[#B8C0C1] mt-1 truncate" title={patient.procedure}>
                                         {patient.procedure}
                                     </span>
                                 )}
@@ -356,7 +356,7 @@
                     </button>
                     <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                         <div className="overflow-hidden">
-                            <div className="p-4 border-t border-gray-700 space-y-4">
+                            <div className="p-4 border-t border-[#255356] space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <InputField label="Weight (kg)" name="weight" value={patient.weight} onChange={handleInputChange} />
                                     <InputField label="Height (m)" name="height" value={patient.height} onChange={handleInputChange} />
@@ -366,13 +366,13 @@
                                     <InputField label="Ketamine Amount" name="ketamineAmount" value={patient.ketamineAmount} onChange={handleInputChange} />
                                     <div className="col-span-2">
                                         <div>
-                                            <label htmlFor="sedationType" className="block text-sm font-medium text-gray-300 mb-1">Sedation Type</label>
+                                            <label htmlFor="sedationType" className="block text-sm font-medium text-[#B8C0C1] mb-1">Sedation Type</label>
                                             <select
                                                 id="sedationType"
                                                 name="sedationType"
                                                 value={patient.sedationType}
                                                 onChange={handleInputChange}
-                                                className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                                className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]"
                                             >
                                                 <option value="Deep">Deep</option>
                                                 <option value="Awake">Awake</option>
@@ -381,7 +381,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-1">Patient Notes</label>
+                                    <label className="block text-sm font-medium text-[#B8C0C1] mb-1">Patient Notes</label>
                                     <div className="space-y-2">
                                         {patient.notes.map((note, index) => (
                                             <textarea
@@ -390,7 +390,7 @@
                                                 onChange={(e) => handleNoteChange(index, e.target.value)}
                                                 placeholder={`Note ${index + 1}`}
                                                 rows={1}
-                                                className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
+                                                className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364] resize-y"
                                             />
                                         ))}
                                     </div>
@@ -567,14 +567,14 @@
             };
 
             return (
-                <div className="min-h-screen bg-gray-900 text-white font-sans">
+                <div className="min-h-screen bg-[#123133] text-[#EAEFF0] font-sans">
                     <div className="max-w-md mx-auto p-4">
                         <header className="py-4">
-                            <h1 className="text-3xl font-bold text-center text-indigo-400 mb-4">Pain Data Manager</h1>
+                            <h1 className="text-3xl font-bold text-center text-white mb-4">Pain Data Manager</h1>
                             <div className="flex justify-center space-x-2 flex-wrap gap-2">
                                 <button
                                     onClick={triggerFileInput}
-                                    className="flex items-center justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
+                                    className="flex items-center justify-center px-4 py-3 bg-[#246364] hover:bg-[#1e5051] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
                                     aria-label="Import XLSX file"
                                 >
                                     <UploadIcon />
@@ -590,7 +590,7 @@
                                 <button
                                     onClick={handleExport}
                                     disabled={allPatientData.length === 0}
-                                    className="flex items-center justify-center px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:transform-none"
+                                    className="flex items-center justify-center px-4 py-3 bg-[#2F855A] hover:bg-[#276c4a] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     aria-label="Export data to XLSX file"
                                 >
                                     <DownloadIcon />
@@ -599,7 +599,7 @@
                                 <button
                                     onClick={handleClearAll}
                                     disabled={allPatientData.length === 0}
-                                    className="flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:transform-none"
+                                    className="flex items-center justify-center px-4 py-3 bg-[#E53E3E] hover:bg-[#C53030] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     aria-label="Clear all data"
                                 >
                                     <TrashIcon />
@@ -608,7 +608,7 @@
                                 {deferredPrompt && (
                                     <button
                                         onClick={handleInstallClick}
-                                        className="flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
+                                        className="flex items-center justify-center px-4 py-3 bg-[#6B46C1] hover:bg-[#553C9A] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
                                         aria-label="Install application"
                                     >
                                         <InstallIcon />
@@ -619,11 +619,11 @@
                         </header>
 
                         <main className="mt-6 space-y-6">
-                            {isLoading && <p className="text-center text-lg text-blue-400">Processing file...</p>}
-                            {error && <p className="text-center text-lg text-red-400 bg-red-900/50 p-3 rounded-lg">{error}</p>}
+                            {isLoading && <p className="text-center text-lg text-[#66d1cc]">Processing file...</p>}
+                            {error && <p className="text-center text-lg text-[#F56565] bg-red-500/20 p-3 rounded-lg">{error}</p>}
                             
                             {!isLoading && allPatientData.length === 0 && !error && (
-                                <div className="text-center text-gray-400 mt-16 p-6 bg-gray-800 rounded-lg">
+                                <div className="text-center text-[#B8C0C1] mt-16 p-6 bg-[#184144] rounded-lg">
                                     <p className="text-xl">Welcome!</p>
                                     <p>Click "Import" to load patient data.</p>
                                 </div>
@@ -631,8 +631,8 @@
 
                             {allPatientData.map((patientData, index) => (
                                 patientData.patients.length > 0 && (
-                                    <div key={`${patientData.sectionHeader}-${index}`} className="bg-black/20 rounded-lg shadow-lg overflow-hidden border border-gray-700">
-                                         <h2 className="p-4 text-xl font-bold text-center text-indigo-300 bg-gray-800">
+                                    <div key={`${patientData.sectionHeader}-${index}`} className="bg-black/20 rounded-lg shadow-lg overflow-hidden border border-[#255356]">
+                                         <h2 className="p-4 text-xl font-bold text-center text-white bg-[#184144]">
                                             {patientData.sectionHeader}
                                          </h2>
                                         <div className="p-4 space-y-3">
