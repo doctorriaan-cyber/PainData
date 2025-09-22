@@ -144,6 +144,7 @@
               ketamineAmount: getCellValue(worksheet, `N${startRow + 10}`),
               originalRow: startRow,
               caution: false,
+              penicillinAllergy: false,
             };
             
             patients.push(patient);
@@ -409,11 +410,12 @@
             }, [patient.name, patient.age, patient.weight, patient.height]);
 
             return (
-                <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden" ref={accordionRef}>
+                <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden">
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="w-full flex justify-between items-center p-4 text-left hover:bg-[#255356] focus:outline-none focus:bg-[#255356]"
+                        className={`w-full flex justify-between items-center p-4 text-left focus:outline-none transition-colors duration-200 ${patient.caution ? 'bg-red-400/40 hover:bg-red-400/50 focus:bg-red-400/40' : 'hover:bg-[#255356] focus:bg-[#255356]'}`}
                         aria-expanded={isOpen}
+                        ref={accordionRef}
                     >
                         <div className="flex items-start min-w-0">
                             <div className="flex flex-col items-center mr-3 flex-shrink-0 w-8">
@@ -424,11 +426,9 @@
                                 {patientNumber && (
                                     <span className="text-xl font-bold text-[#B8C0C1] mt-1">{patientNumber}</span>
                                 )}
-                                {patient.caution && (
-                                    <div className="mt-1">
-                                        <CautionIcon />
-                                    </div>
-                                )}
+                                <div className="mt-1 h-7 flex items-center justify-center" title={patient.penicillinAllergy ? "Penicillin Allergy" : ""}>
+                                    {patient.penicillinAllergy && <span className="text-xl">💊</span>}
+                                </div>
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="truncate font-semibold text-lg text-[#EAEFF0]" title={name}>{name}</span>
@@ -456,7 +456,7 @@
                                     <InputField label="Out Time" name="outTime" value={patient.outTime} onChange={handleInputChange} />
                                     <InputField label="TCI" name="tci" value={patient.tci} onChange={handleInputChange} />
                                     <InputField label="Ketamine Amount" name="ketamineAmount" value={patient.ketamineAmount} onChange={handleInputChange} />
-                                    <div className="col-span-2 grid grid-cols-2 gap-4">
+                                    <div className="col-span-2 grid grid-cols-3 items-end gap-4">
                                         <div>
                                             <label htmlFor={`sedationType-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1">Sedation Type</label>
                                             <select
@@ -477,6 +477,17 @@
                                                 id={`caution-${patient.id}`}
                                                 name="caution"
                                                 checked={!!patient.caution}
+                                                onChange={handleInputChange}
+                                                className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col items-center">
+                                            <label htmlFor={`penicillinAllergy-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1">Penicillin Allergy</label>
+                                            <input
+                                                type="checkbox"
+                                                id={`penicillinAllergy-${patient.id}`}
+                                                name="penicillinAllergy"
+                                                checked={!!patient.penicillinAllergy}
                                                 onChange={handleInputChange}
                                                 className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
                                             />
