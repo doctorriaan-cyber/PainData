@@ -148,7 +148,7 @@
           return { sectionHeader, patients };
         };
 
-        const exportPatientData = async (patients, fileName = 'pain_data_export.xlsx') => {
+        const exportPatientData = (patients, fileName = 'pain_data_export.xlsx') => {
             const wb = XLSX.utils.book_new();
             const ws = {};
 
@@ -193,7 +193,20 @@
             }
             
             XLSX.utils.book_append_sheet(wb, ws, "Patient Data");
-            XLSX.writeFile(wb, fileName);
+    
+            // Manually create and trigger download to avoid any Web Share API interference
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/octet-stream' });
+
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         };
 
         // --- From components/ConfirmModal.tsx ---
@@ -784,11 +797,11 @@
                 }
             };
 
-            const performExport = async (section) => {
+            const performExport = (section) => {
                 const headerPart = section.sectionHeader.split(',')[0].trim();
                 const fileName = `${headerPart || 'pain_data'}.xlsx`;
                 try {
-                    await exportPatientData(section.patients, fileName);
+                    exportPatientData(section.patients, fileName);
                 } catch (err) {
                     console.error(err);
                     setError('Failed to export data.');
@@ -800,7 +813,12 @@
                     alert('No patient data to export.');
                     return;
                 }
-                setIsExportModalOpen(true);
+                
+                if (allPatientData.length === 1) {
+                    performExport(allPatientData[0]);
+                } else {
+                    setIsExportModalOpen(true);
+                }
             };
             
             const handleSelectAndExport = (section) => {
