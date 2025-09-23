@@ -199,30 +199,25 @@
                 const blob = new Blob([wbout], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
                 const file = new File([blob], fileName, { type: blob.type });
 
-                if (navigator.canShare && !navigator.canShare({ files: [file] })) {
-                    alert('Your browser does not support sharing this type of file.');
-                    return;
-                }
-
                 try {
                     await navigator.share({
                         files: [file],
                         title: 'Patient Data Export',
-                        text: fileName,
+                        text: `Share ${fileName}`,
                     });
-                    return; // Success, we are done.
                 } catch (error) {
                     if (error.name === 'AbortError') {
-                        console.log('Share was cancelled.');
+                        console.log('Share was cancelled by the user.');
                     } else {
                         console.error('Web Share API failed:', error);
-                        alert('An error occurred. The file could not be shared.');
+                        alert(`An error occurred while trying to share the file.\n\nDetails: ${error.name} - ${error.message}`);
                     }
-                    return; // Do not fall back to download.
                 }
+                // After trying to share (success, fail, or cancel), stop and do not fall back to downloading.
+                return;
             }
     
-            // Fallback for browsers that do not support Web Share API.
+            // Fallback for browsers that do not support Web Share API (e.g., desktop).
             XLSX.writeFile(wb, fileName);
         };
 
@@ -830,12 +825,7 @@
                     alert('No patient data to export.');
                     return;
                 }
-                
-                if (allPatientData.length === 1) {
-                    performExport(allPatientData[0]);
-                } else {
-                    setIsExportModalOpen(true);
-                }
+                setIsExportModalOpen(true);
             };
             
             const handleSelectAndExport = (section) => {
