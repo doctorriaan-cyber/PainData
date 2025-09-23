@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>pain</title>
     <meta name="description" content="An application to import, view, edit, and export patient data from an XLSX file, designed for mobile use." />
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoicGFpbiIsInNob3J0X25hbWUiOiJwYWluIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxMjMxMzMiLCJ0aGVtZV9jb2xvciI6IiMxMjMxMzMiLCJkZXNjcmlwdGlvbiI6IkFuIGFwcGxpY2F0aW9uIHRvIGltcG9ydCwgdmlldywgZWRpdCwgYW5kIGV4cG9ydCBwYXRpZW50IGRhdGEuIiwiaWNvbnMiOlt7InNyYyI6ImNyb3BwZWQucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19" />
-    <meta name="theme-color" content="#123133" />
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoicGFpbiIsInNob3J0X25hbWUiOiJwYWluIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDM2MzgiLCJ0aGVtZV9jb2xvciI6IiMwMDM2MzgiLCJkZXNjcmlwdGlvbiI6IkFuIGFwcGxpY2F0aW9uIHRvIGltcG9ydCwgdmlldywgZWRpdCwgYW5kIGV4cG9ydCBwYXRpZW50IGRhdGEuIiwiaWNvbnMiOlt7InNyYyI6ImNyb3BwZWQucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19" />
+    <meta name="theme-color" content="#003638" />
     <link rel="apple-touch-icon" href="cropped.png" />
     
     <!-- CDNs -->
@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-[#123133]">
+<body class="bg-[#003638]">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -236,7 +236,7 @@
                                                 type="checkbox"
                                                 checked={!!selections[index]}
                                                 onChange={() => handleCheckboxChange(index)}
-                                                className="h-5 w-5 rounded bg-[#123133] border-[#35686b] text-[#246364] focus:ring-[#246364] focus:ring-offset-[#184144]"
+                                                className="h-5 w-5 rounded bg-[#003638] border-[#35686b] text-[#246364] focus:ring-[#246364] focus:ring-offset-[#184144]"
                                             />
                                             <span className="ml-3 text-[#EAEFF0] truncate" title={section.sectionHeader}>{section.sectionHeader}</span>
                                         </label>
@@ -246,7 +246,7 @@
                                 <p className="text-[#B8C0C1] text-center">{message}</p>
                             )}
                         </div>
-                        <div className="p-4 bg-[#123133]/50 flex justify-center space-x-4 rounded-b-lg">
+                        <div className="p-4 bg-[#003638]/50 flex justify-center space-x-4 rounded-b-lg">
                              <button
                                 onClick={onClose}
                                 className="px-6 py-2 bg-[#4a6566] hover:bg-[#3e5556] text-white font-semibold rounded-lg w-full"
@@ -849,10 +849,10 @@
             let cumulativePatientCount = 0;
 
             return (
-                <div className="min-h-screen bg-[#123133] text-[#EAEFF0] font-sans">
+                <div className="min-h-screen bg-[#003638] text-[#EAEFF0] font-sans">
                     <div className="max-w-md mx-auto p-4">
                         <header className="py-4">
-                            <img src="cropped.png" alt="Pain app logo" className="mx-auto w-32 h-32" width="192" height="192" />
+                            <img src="cropped.png" alt="Pain app logo" className="mx-auto w-64 h-64" width="192" height="192" />
                         </header>
 
                         <main className="mt-6 space-y-6">
