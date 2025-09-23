@@ -193,49 +193,7 @@
             }
             
             XLSX.utils.book_append_sheet(wb, ws, "Patient Data");
-
-            const triggerDownload = () => {
-                XLSX.writeFile(wb, fileName);
-            };
-
-            if (navigator.share) {
-                const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-                const blob = new Blob([wbout], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-                const file = new File([blob], fileName, { type: blob.type });
-
-                const shareData = {
-                    files: [file],
-                    title: 'Patient Data Export',
-                    text: `Share ${fileName}`,
-                };
-                
-                if (navigator.canShare && !navigator.canShare(shareData)) {
-                     if (window.confirm("Sharing this file is not supported on your browser. Would you like to download it instead?")) {
-                        triggerDownload();
-                    }
-                    return;
-                }
-
-                try {
-                    await navigator.share(shareData);
-                } catch (error) {
-                    if (error.name === 'AbortError') {
-                        console.log('Share was cancelled by the user.');
-                    } else if (error.name === 'NotAllowedError') {
-                        console.error('Web Share API permission denied:', error);
-                        if (window.confirm(`Sharing failed because permission was denied. This can happen in some browsers or sandboxed environments.\n\nWould you like to download the file instead?`)) {
-                            triggerDownload();
-                        }
-                    } else {
-                        console.error('Web Share API failed:', error);
-                        if (window.confirm(`An error occurred while sharing: ${error.message}.\n\nWould you like to download the file instead?`)) {
-                            triggerDownload();
-                        }
-                    }
-                }
-            } else {
-                triggerDownload();
-            }
+            XLSX.writeFile(wb, fileName);
         };
 
         // --- From components/ConfirmModal.tsx ---
