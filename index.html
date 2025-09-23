@@ -21,16 +21,15 @@
 
     <script type="text/babel">
         // --- From components/icons.tsx ---
-        const UploadIcon = () => (
+        const ImportIcon = () => (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.414l-1.293 1.293a1 1 0 01-1.414-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 9.414V13H5.5z" />
-                <path d="M9 13h2v5H9v-5z" />
+                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v10.586l3.293-3.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 111.414-1.414L9 14.586V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
         );
 
-        const DownloadIcon = () => (
+        const ExportIcon = () => (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 7.414V13a1 1 0 11-2 0V7.414L6.293 9.707z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M10 17a1 1 0 01-1-1V5.414l-3.293 3.293a1 1 0 11-1.414-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 11-1.414 1.414L11 5.414V16a1 1 0 01-1 1z" clipRule="evenodd" />
             </svg>
         );
 
@@ -149,7 +148,7 @@
           return { sectionHeader, patients };
         };
 
-        const exportPatientData = (patients, fileName = 'pain_data_export.xlsx') => {
+        const exportPatientData = async (patients, fileName = 'pain_data_export.xlsx') => {
             const wb = XLSX.utils.book_new();
             const ws = {};
 
@@ -194,6 +193,36 @@
             }
             
             XLSX.utils.book_append_sheet(wb, ws, "Patient Data");
+
+            if (navigator.share) {
+                const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                const blob = new Blob([wbout], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+                const file = new File([blob], fileName, { type: blob.type });
+
+                if (navigator.canShare && !navigator.canShare({ files: [file] })) {
+                    alert('Your browser does not support sharing this type of file.');
+                    return;
+                }
+
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Patient Data Export',
+                        text: fileName,
+                    });
+                    return; // Success, we are done.
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        console.log('Share was cancelled.');
+                    } else {
+                        console.error('Web Share API failed:', error);
+                        alert('An error occurred. The file could not be shared.');
+                    }
+                    return; // Do not fall back to download.
+                }
+            }
+    
+            // Fallback for browsers that do not support Web Share API.
             XLSX.writeFile(wb, fileName);
         };
 
@@ -785,11 +814,11 @@
                 }
             };
 
-            const performExport = (section) => {
+            const performExport = async (section) => {
                 const headerPart = section.sectionHeader.split(',')[0].trim();
                 const fileName = `${headerPart || 'pain_data'}.xlsx`;
                 try {
-                    exportPatientData(section.patients, fileName);
+                    await exportPatientData(section.patients, fileName);
                 } catch (err) {
                     console.error(err);
                     setError('Failed to export data.');
@@ -901,7 +930,7 @@
                                     className="flex items-center justify-center px-4 py-3 bg-[#246364] hover:bg-[#1e5051] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
                                     aria-label="Import XLSX file"
                                 >
-                                    <UploadIcon />
+                                    <ImportIcon />
                                     <span className="ml-2 hidden sm:inline">Import</span>
                                 </button>
                                 <input
@@ -917,7 +946,7 @@
                                     className="flex items-center justify-center px-4 py-3 bg-[#2F855A] hover:bg-[#276c4a] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     aria-label="Export data to XLSX file"
                                 >
-                                    <DownloadIcon />
+                                    <ExportIcon />
                                     <span className="ml-2 hidden sm:inline">Export</span>
                                 </button>
                                 <button
