@@ -504,19 +504,26 @@
                 );
             }, [patient.inTime, patient.outTime, patient.weight, patient.height, patient.tci]);
 
-            const { name, calculatedBmi } = React.useMemo(() => {
+            const { name, calculatedBmi, maxWeight } = React.useMemo(() => {
                 const weightNum = parseFloat(patient.weight);
                 const heightNum = parseFloat(patient.height);
                 let bmi = null;
+                let maxW = null;
 
                 if (weightNum > 0 && heightNum > 0) {
                     const heightInMeters = heightNum;
                     bmi = (weightNum / (heightInMeters * heightInMeters)).toFixed(1);
                 }
+                
+                if (bmi && parseFloat(bmi) >= 35 && heightNum > 0) {
+                    const heightInMeters = heightNum;
+                    maxW = Math.round(34.5 * heightInMeters * heightInMeters);
+                }
 
                 return {
                     name: patient.name || 'Unnamed Patient',
                     calculatedBmi: (bmi && !isNaN(bmi)) ? bmi : null,
+                    maxWeight: maxW,
                 };
             }, [patient.name, patient.weight, patient.height]);
 
@@ -568,6 +575,8 @@
                 );
             }
 
+            const weightLabel = maxWeight ? `Weight (kg), Max ${maxWeight}kg` : 'Weight (kg)';
+
             return (
                 <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden">
                     <button
@@ -614,7 +623,7 @@
                         <div className="overflow-hidden">
                             <div className="p-4 border-t border-[#255356] space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <InputField id={`weight-${patient.id}`} label="Weight (kg)" name="weight" value={patient.weight} onChange={handleInputChange} />
+                                    <InputField id={`weight-${patient.id}`} label={weightLabel} name="weight" value={patient.weight} onChange={handleInputChange} />
                                     <InputField id={`height-${patient.id}`} label="Height (m)" name="height" value={patient.height} onChange={handleInputChange} />
                                     <InputField id={`inTime-${patient.id}`} label="In Time" name="inTime" value={patient.inTime} onChange={handleInputChange} />
                                     <InputField id={`outTime-${patient.id}`} label="Out Time" name="outTime" value={patient.outTime} onChange={handleInputChange} />
