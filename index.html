@@ -702,7 +702,15 @@
             const [allPatientData, setAllPatientData] = useState(() => {
                 try {
                     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-                    return savedData ? JSON.parse(savedData) : [];
+                    const parsedData = savedData ? JSON.parse(savedData) : [];
+                     // Migration logic for adding IDs to sections if they don't exist
+                    if (Array.isArray(parsedData) && parsedData.some(d => !d.id)) {
+                        return parsedData.map((section, index) => ({
+                            ...section,
+                            id: section.id || `section-${Date.now()}-${index}`
+                        }));
+                    }
+                    return parsedData || [];
                 } catch (error) {
                     console.error("Failed to load data from local storage", error);
                     return [];
@@ -793,7 +801,8 @@
                     if (data.patients.length === 0) {
                       setError("No patient data found in the file. Please check the format.");
                     } else {
-                      setAllPatientData(prevData => [...prevData, data]);
+                      const sectionWithId = { ...data, id: `section-${Date.now()}-${Math.random()}` };
+                      setAllPatientData(prevData => [...prevData, sectionWithId]);
                     }
                 } catch (err) {
                     console.error(err);
@@ -843,6 +852,17 @@
                             p.id === updatedPatient.id ? updatedPatient : p
                         ),
                     }))
+                );
+            }, []);
+
+            const handleSectionHeaderChange = useCallback((sectionId, newHeader) => {
+                setAllPatientData(currentAllData =>
+                    currentAllData.map(section => {
+                        if (section.id === sectionId) {
+                            return { ...section, sectionHeader: newHeader };
+                        }
+                        return section;
+                    })
                 );
             }, []);
 
@@ -896,10 +916,15 @@
                                 cumulativePatientCount += patientData.patients.length;
 
                                 return (
-                                    <div key={`${patientData.sectionHeader}-${index}`} className="bg-black/20 rounded-lg shadow-lg overflow-hidden border border-[#255356]">
-                                         <h2 className="p-4 text-xl font-bold text-center text-white bg-[#184144]">
-                                            {patientData.sectionHeader}
-                                         </h2>
+                                    <div key={patientData.id} className="bg-black/20 rounded-lg shadow-lg overflow-hidden border border-[#255356]">
+                                         <input
+                                            type="text"
+                                            value={patientData.sectionHeader}
+                                            onChange={(e) => handleSectionHeaderChange(patientData.id, e.target.value)}
+                                            className="w-full p-4 text-xl font-bold text-center text-white bg-[#184144] border-0 focus:ring-2 focus:ring-inset focus:ring-[#246364] focus:outline-none"
+                                            aria-label="Editable section header"
+                                            placeholder="Section Header"
+                                         />
                                         <div className="p-4 space-y-3">
                                             {patientData.patients.map((patient, patientIndex) => (
                                                 <PatientAccordion
