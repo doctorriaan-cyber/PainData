@@ -1084,7 +1084,7 @@
                                         <div className="mt-4 pt-4 border-t border-[#255356]">
                                             <h3 className="font-semibold text-md text-[#B8C0C1]">Highest BMI Patient</h3>
                                             <p className="text-sm mt-2 leading-relaxed">
-                                                Patient <strong className="text-white">{stats.bmiStats.highestBmi.patientName}</strong> had the highest BMI of <strong className="text-white">{stats.bmiStats.highestBmi.bmi.toFixed(1)}</strong> for procedure <strong>{stats.bmiStats.highestBmi.procedure || 'N/A'}</strong>. This was recorded on {stats.bmiStats.highestBmi.date} with Dr. <strong>{stats.bmiStats.highestBmi.doctorName}</strong> at <strong>{stats.bmiStats.highestBmi.hospitalName}</strong>.
+                                                Patient <strong className="text-white">{stats.bmiStats.highestBmi.patientName}</strong> had the highest BMI of <strong className="text-white">{stats.bmiStats.highestBmi.bmi.toFixed(1)}</strong> for procedure <strong>{stats.bmiStats.highestBmi.procedure || 'N/A'}</strong>. This was recorded on {stats.bmiStats.highestBmi.date} with <strong>{stats.bmiStats.highestBmi.doctorName}</strong> at <strong>{stats.bmiStats.highestBmi.hospitalName}</strong>.
                                             </p>
                                         </div>
                                     )}
@@ -1111,7 +1111,7 @@
                                             <h3 className="font-semibold text-md text-[#B8C0C1]">Oldest Patient</h3>
                                             <p className="text-sm mt-2 leading-relaxed">
                                                 The oldest patient was <strong className="text-white">{stats.ageStats.oldestPatient.patientName}</strong> (Age: <strong className="text-white">{stats.ageStats.oldestPatient.age}</strong>).
-                                                This was recorded on {stats.ageStats.oldestPatient.date || 'an unknown date'} for procedure <strong>{stats.ageStats.oldestPatient.procedure || 'N/A'}</strong> with Dr. <strong>{stats.ageStats.oldestPatient.doctorName}</strong> at <strong>{stats.ageStats.oldestPatient.hospitalName}</strong>.
+                                                This was recorded on {stats.ageStats.oldestPatient.date || 'an unknown date'} for procedure <strong>{stats.ageStats.oldestPatient.procedure || 'N/A'}</strong> with <strong>{stats.ageStats.oldestPatient.doctorName}</strong> at <strong>{stats.ageStats.oldestPatient.hospitalName}</strong>.
                                             </p>
                                         </div>
                                     )}
@@ -1124,7 +1124,7 @@
                                     <div className="mt-2">
                                         <p className="text-sm leading-relaxed">
                                             <strong className="text-white">{stats.longestTheaterTime.patientName}</strong> had the longest time of <strong className="text-white">{formatDuration(stats.longestTheaterTime.duration)}</strong> for procedure <strong>{stats.longestTheaterTime.procedure || 'N/A'}</strong>.
-                                            This was recorded on {stats.longestTheaterTime.date} with Dr. <strong>{stats.longestTheaterTime.doctorName}</strong> at <strong>{stats.longestTheaterTime.hospitalName}</strong>.
+                                            This was recorded on {stats.longestTheaterTime.date} with <strong>{stats.longestTheaterTime.doctorName}</strong> at <strong>{stats.longestTheaterTime.hospitalName}</strong>.
                                         </p>
                                     </div>
                                 </div>
