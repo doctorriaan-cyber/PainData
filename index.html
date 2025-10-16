@@ -52,6 +52,12 @@
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
         );
+        
+        const PlusIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+        );
 
         const TrashIcon = () => (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -181,6 +187,7 @@
                     originalRow: startRow,
                     caution: false,
                     penicillinAllergy: false,
+                    previouslyDone: false,
                 };
 
                 patients.push(patient);
@@ -442,7 +449,6 @@
             );
         };
 
-
         // --- From components/ExportModal.tsx ---
         const ExportModal = ({ sections, onSelect, onClose }) => {
             return (
@@ -488,6 +494,107 @@
                 </div>
             );
         };
+        
+        // --- From components/AddPatientModals ---
+        const AddPatientModal = ({ onAdd, onClose, listName }) => {
+            const [name, setName] = React.useState('');
+            const [age, setAge] = React.useState('');
+            const [procedure, setProcedure] = React.useState('');
+
+            const handleSubmit = () => {
+                if (name.trim() && procedure.trim()) {
+                    onAdd({ name, age, procedure });
+                }
+            };
+
+            const isAddDisabled = !name.trim() || !procedure.trim();
+
+            return (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+                    aria-modal="true"
+                    role="dialog"
+                    onClick={onClose}
+                >
+                    <div 
+                        className="bg-[#184144] rounded-lg shadow-2xl w-full max-w-sm border border-[#255356]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center p-4 border-b border-[#35686b]">
+                            <h2 className="text-xl font-bold text-[#EAEFF0]">Add New Patient</h2>
+                            <button onClick={onClose} className="text-[#B8C0C1] hover:text-[#EAEFF0]">
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div className="p-4 space-y-4">
+                            <p className="text-sm text-[#B8C0C1]">Adding patient to: <strong className="text-white">{listName}</strong></p>
+                            <div>
+                                <label htmlFor="patient-name" className="block text-sm font-medium text-[#B8C0C1] mb-1">Patient Name*</label>
+                                <input id="patient-name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]" />
+                            </div>
+                            <div>
+                                <label htmlFor="patient-age" className="block text-sm font-medium text-[#B8C0C1] mb-1">Age</label>
+                                <input id="patient-age" type="number" value={age} onChange={(e) => setAge(e.target.value)} className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]" />
+                            </div>
+                            <div>
+                                <label htmlFor="patient-procedure" className="block text-sm font-medium text-[#B8C0C1] mb-1">Procedure*</label>
+                                <input id="patient-procedure" type="text" value={procedure} onChange={(e) => setProcedure(e.target.value)} className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]" />
+                            </div>
+                        </div>
+                        <div className="p-4 bg-[#123133]/50 flex justify-end space-x-4 rounded-b-lg">
+                            <button onClick={onClose} className="px-4 py-2 bg-[#4a6566] hover:bg-[#3e5556] text-white font-semibold rounded-lg">Cancel</button>
+                            <button onClick={handleSubmit} disabled={isAddDisabled} className="px-4 py-2 bg-[#2F855A] hover:bg-[#276c4a] text-white font-semibold rounded-lg disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed">Add Patient</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const SelectListModal = ({ sections, onSelect, onClose }) => {
+            return (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+                    aria-modal="true"
+                    role="dialog"
+                    onClick={onClose}
+                >
+                    <div 
+                        className="bg-[#184144] rounded-lg shadow-2xl w-full max-w-sm border border-[#255356]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center p-4 border-b border-[#35686b]">
+                            <h2 className="text-xl font-bold text-[#EAEFF0]">Select List</h2>
+                            <button onClick={onClose} className="text-[#B8C0C1] hover:text-[#EAEFF0]">
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div className="p-4 max-h-80 overflow-y-auto">
+                            <p className="text-[#B8C0C1] mb-4">Choose which list to add the new patient to.</p>
+                            <div className="space-y-3">
+                                {sections.map((section, index) => (
+                                    <button
+                                        key={section.id}
+                                        onClick={() => onSelect(index)}
+                                        className="w-full text-left px-4 py-3 bg-[#255356] hover:bg-[#246364] text-[#EAEFF0] rounded-md transition-colors duration-200"
+                                    >
+                                        {section.sectionHeader}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="p-4 border-t border-[#35686b] text-right">
+                             <button
+                                onClick={onClose}
+                                className="px-4 py-2 bg-[#4a6566] hover:bg-[#3e5556] text-white font-semibold rounded-lg"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
 
         // --- From components/CustomSelect.tsx ---
         const CustomSelect = ({ label, options, value, onChange, id }) => {
@@ -659,7 +766,26 @@
             const handleInputChange = (e) => {
                 const { name, value, type, checked } = e.target;
                 const newValue = type === 'checkbox' ? checked : value;
-                onUpdate({ ...patient, [name]: newValue });
+
+                if (name === 'penicillinAllergy') {
+                    const allergyText = 'Penicillin allergy';
+                    const newNotes = [...patient.notes];
+                    const firstNote = newNotes[0] || '';
+
+                    if (newValue) { // checked
+                        // Prepend if not already there, case-insensitive check
+                        if (!firstNote.trim().toLowerCase().startsWith(allergyText.toLowerCase())) {
+                            newNotes[0] = `${allergyText}. ${firstNote.trim()}`.trim();
+                        }
+                    } else { // unchecked
+                        // Remove if present at the beginning, case-insensitive
+                        const regex = new RegExp(`^${allergyText}\\.?\\s*`, 'i');
+                        newNotes[0] = firstNote.replace(regex, '').trim();
+                    }
+                    onUpdate({ ...patient, penicillinAllergy: newValue, notes: newNotes });
+                } else {
+                    onUpdate({ ...patient, [name]: newValue });
+                }
             };
             
             const handleSedationChange = (newValue) => {
@@ -791,7 +917,12 @@
                                 )}
                             </div>
                         </div>
-                        <ChevronDownIcon isOpen={isOpen} />
+                        <div className="flex items-center">
+                            {patient.previouslyDone && (
+                                <span className="text-2xl text-[#48BB78] font-bold mr-2" title="Previously Done">*</span>
+                            )}
+                            <ChevronDownIcon isOpen={isOpen} />
+                        </div>
                     </button>
                     <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                         <div className="overflow-hidden">
@@ -815,16 +946,18 @@
                                         </div>
                                     </div>
                                     
-                                    <div className="col-span-2 grid grid-cols-3 items-end gap-4">
-                                        <CustomSelect
-                                            id={`sedationType-${patient.id}`}
-                                            label="Sedation Type"
-                                            options={['Deep', 'Awake']}
-                                            value={patient.sedationType}
-                                            onChange={handleSedationChange}
-                                        />
+                                    <div className="col-span-2 grid grid-cols-5 items-end gap-2">
+                                        <div className="col-span-2">
+                                            <CustomSelect
+                                                id={`sedationType-${patient.id}`}
+                                                label="Sedation Type"
+                                                options={['Deep', 'Awake']}
+                                                value={patient.sedationType}
+                                                onChange={handleSedationChange}
+                                            />
+                                        </div>
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`caution-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1">Caution</label>
+                                            <label htmlFor={`caution-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1 h-10 flex items-center justify-center text-center">Caution</label>
                                             <input
                                                 type="checkbox"
                                                 id={`caution-${patient.id}`}
@@ -835,12 +968,23 @@
                                             />
                                         </div>
                                         <div className="flex flex-col items-center">
-                                            <label htmlFor={`penicillinAllergy-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1">Penicillin Allergy</label>
+                                            <label htmlFor={`penicillinAllergy-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1 h-10 flex items-center justify-center text-center">Penicillin Allergy</label>
                                             <input
                                                 type="checkbox"
                                                 id={`penicillinAllergy-${patient.id}`}
                                                 name="penicillinAllergy"
                                                 checked={!!patient.penicillinAllergy}
+                                                onChange={handleInputChange}
+                                                className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col items-center">
+                                            <label htmlFor={`previouslyDone-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1 h-10 flex items-center justify-center text-center">Previously Done</label>
+                                            <input
+                                                type="checkbox"
+                                                id={`previouslyDone-${patient.id}`}
+                                                name="previouslyDone"
+                                                checked={!!patient.previouslyDone}
                                                 onChange={handleInputChange}
                                                 className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
                                             />
@@ -855,7 +999,6 @@
                                                 <AutosizeTextarea
                                                     value={note}
                                                     onChange={(e) => handleNoteChange(index, e.target.value)}
-                                                    placeholder={`Note ${index + 1}`}
                                                 />
                                             </div>
                                         ))}
@@ -1224,6 +1367,10 @@
                     return { ...initialStatsData };
                 }
             });
+            
+            const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+            const [isSelectListModalOpen, setIsSelectListModalOpen] = useState(false);
+            const [targetListIndex, setTargetListIndex] = useState(null);
 
             const [isLoading, setIsLoading] = useState(false);
             const [error, setError] = useState(null);
@@ -1414,6 +1561,60 @@
                     })
                 );
             }, []);
+            
+            const handleOpenAddPatientFlow = () => {
+                if (allPatientData.length === 0) return;
+                if (allPatientData.length === 1) {
+                    setTargetListIndex(0);
+                    setIsAddPatientModalOpen(true);
+                } else {
+                    setIsSelectListModalOpen(true);
+                }
+            };
+
+            const handleListSelectedForAdd = (index) => {
+                setTargetListIndex(index);
+                setIsSelectListModalOpen(false);
+                setIsAddPatientModalOpen(true);
+            };
+
+            const handleAddNewPatient = ({ name, age, procedure }) => {
+                if (targetListIndex === null) return;
+                
+                setAllPatientData(currentAllData => {
+                    const newData = [...currentAllData];
+                    const targetSection = newData[targetListIndex];
+                    const lastPatient = targetSection.patients[targetSection.patients.length - 1];
+                    
+                    // If the last patient exists, add 12 to their row. Otherwise, start at row 1.
+                    const newOriginalRow = lastPatient ? lastPatient.originalRow + 12 : 1;
+
+                    const newPatient = {
+                        id: `p-manual-${Date.now()}`,
+                        name: name,
+                        age: age || '',
+                        procedure: procedure,
+                        inTime: '',
+                        outTime: '',
+                        weight: '',
+                        height: '',
+                        sedationType: 'Deep',
+                        tci: '',
+                        notes: Array(7).fill(''),
+                        ketamineAmount: '',
+                        originalRow: newOriginalRow,
+                        caution: false,
+                        penicillinAllergy: false,
+                        previouslyDone: false,
+                    };
+                    
+                    targetSection.patients.push(newPatient);
+                    return newData;
+                });
+
+                setIsAddPatientModalOpen(false);
+                setTargetListIndex(null);
+            };
 
             const handleClearAll = () => {
                 const initialSelections = {};
@@ -1499,6 +1700,15 @@
                         <footer className="mt-8 pt-6 border-t border-[#255356]">
                             <div className="flex justify-center space-x-2 flex-wrap gap-2">
                                 <button
+                                    onClick={handleOpenAddPatientFlow}
+                                    disabled={allPatientData.length === 0}
+                                    className="flex items-center justify-center px-4 py-3 bg-[#6B46C1] hover:bg-[#553C9A] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                    aria-label="Add new patient"
+                                >
+                                    <PlusIcon />
+                                    <span className="ml-2 hidden sm:inline">Add Patient</span>
+                                </button>
+                                <button
                                     onClick={triggerFileInput}
                                     className="flex items-center justify-center px-4 py-3 bg-[#246364] hover:bg-[#1e5051] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
                                     aria-label="Import XLSX file"
@@ -1560,6 +1770,23 @@
                             onSelectionChange={setSelectionsToDelete}
                             onConfirm={performDeletion}
                             onClose={() => setIsConfirmModalOpen(false)}
+                        />
+                    )}
+                    {isSelectListModalOpen && (
+                        <SelectListModal
+                            sections={allPatientData}
+                            onSelect={handleListSelectedForAdd}
+                            onClose={() => setIsSelectListModalOpen(false)}
+                        />
+                    )}
+                    {isAddPatientModalOpen && targetListIndex !== null && (
+                        <AddPatientModal
+                            listName={allPatientData[targetListIndex].sectionHeader}
+                            onAdd={handleAddNewPatient}
+                            onClose={() => {
+                                setIsAddPatientModalOpen(false);
+                                setTargetListIndex(null);
+                            }}
                         />
                     )}
                 </div>
