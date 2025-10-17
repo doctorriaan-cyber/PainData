@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>pain</title>
     <meta name="description" content="An application to import, view, edit, and export patient data from an XLSX file, designed for mobile use." />
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoicGFpbiIsInNob3J0X25hbWUiOiJwYWluIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDM2MzgiLCJ0aGVtZV9jb2xvciI6IiMwMDM2MzgiLCJkZXNjcmlwdGlvbiI6IkFuIGFwcGxpY2F0aW9uIHRvIGltcG9ydCwgdmlldywgZWRpdCwgYW5kIGV4cG9ydCBwYXRpZW50IGRhdGEuIiwiaWNvbnMiOlt7InNyYyI6ImNyb3BwZWQucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19" />
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoicGFpbiIsInNob3J0X25hbWUiOiJwYWluIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDM2MzgiLCJ0aGVtZV9jb2xvciI6IiMwMDM2MzgiLCJkZXNjcmlwdGlvbiI6IkFuIGFwcGxpY2F0aW9uIHRvIGltcG9ydCwgdmlldywgZWRpdCwgYW5kIGV4cG9ydCBwYXRpZW50IGRhdGEuIiwiaWNvbnMiOlt7InNyYyI6ImNyb3BwZWQucG5nIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL/BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19" />
     <meta name="theme-color" content="#003638" />
     <link rel="apple-touch-icon" href="cropped.png" />
     
@@ -56,6 +55,12 @@
         const PlusIcon = () => (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+        );
+
+        const MinusIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
             </svg>
         );
 
@@ -496,7 +501,7 @@
         };
         
         // --- From components/AddPatientModals ---
-        const AddPatientModal = ({ onAdd, onClose, listName }) => {
+        const AddPatientModal = ({ onAdd, onClose, listName, onChangeList }) => {
             const [name, setName] = React.useState('');
             const [age, setAge] = React.useState('');
             const [procedure, setProcedure] = React.useState('');
@@ -527,7 +532,17 @@
                             </button>
                         </div>
                         <div className="p-4 space-y-4">
-                            <p className="text-sm text-[#B8C0C1]">Adding patient to: <strong className="text-white">{listName}</strong></p>
+                            <div className="flex justify-between items-center text-sm">
+                                <p className="text-[#B8C0C1] truncate pr-2">Adding to: <strong className="text-white">{listName}</strong></p>
+                                {onChangeList && (
+                                    <button 
+                                        onClick={onChangeList} 
+                                        className="text-sm text-[#66d1cc] hover:text-white font-semibold py-1 px-3 rounded-md hover:bg-[#255356] flex-shrink-0"
+                                    >
+                                        Change
+                                    </button>
+                                )}
+                            </div>
                             <div>
                                 <label htmlFor="patient-name" className="block text-sm font-medium text-[#B8C0C1] mb-1">Patient Name*</label>
                                 <input id="patient-name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]" />
@@ -550,7 +565,7 @@
             );
         };
 
-        const SelectListModal = ({ sections, onSelect, onClose }) => {
+        const SelectListModal = ({ sections, onSelect, onClose, onCreateNew }) => {
             return (
                 <div 
                     className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
@@ -569,8 +584,17 @@
                             </button>
                         </div>
                         <div className="p-4 max-h-80 overflow-y-auto">
-                            <p className="text-[#B8C0C1] mb-4">Choose which list to add the new patient to.</p>
+                            <p className="text-[#B8C0C1] mb-4">Choose which list to add the new patient to, or create a new one.</p>
                             <div className="space-y-3">
+                                {onCreateNew && (
+                                    <button
+                                        onClick={onCreateNew}
+                                        className="w-full text-left px-4 py-3 bg-[#2F855A] hover:bg-[#276c4a] text-white font-semibold rounded-md transition-colors duration-200 flex items-center justify-center"
+                                    >
+                                        <PlusIcon />
+                                        <span className="ml-2">Create New List</span>
+                                    </button>
+                                )}
                                 {sections.map((section, index) => (
                                     <button
                                         key={section.id}
@@ -589,6 +613,78 @@
                             >
                                 Cancel
                             </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        const CreateListModal = ({ onCreate, onClose, stats }) => {
+            const doctorNames = React.useMemo(() => (stats && stats.patientsByDoctor ? Object.keys(stats.patientsByDoctor).sort() : []), [stats]);
+            const locationNames = React.useMemo(() => (stats && stats.patientsByHospital ? Object.keys(stats.patientsByHospital).sort() : []), [stats]);
+
+            const [doctorName, setDoctorName] = React.useState(doctorNames[0] || '');
+            const [location, setLocation] = React.useState(locationNames[0] || '');
+
+            const handleCreate = () => {
+                if (doctorName.trim() && location.trim()) {
+                    onCreate({ doctorName, location });
+                }
+            };
+
+            const isCreateDisabled = !doctorName.trim() || !location.trim();
+
+            return (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+                    aria-modal="true"
+                    role="dialog"
+                    onClick={onClose}
+                >
+                    <div 
+                        className="bg-[#184144] rounded-lg shadow-2xl w-full max-w-sm border border-[#255356]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center p-4 border-b border-[#35686b]">
+                            <h2 className="text-xl font-bold text-[#EAEFF0]">Create New List</h2>
+                            <button onClick={onClose} className="text-[#B8C0C1] hover:text-[#EAEFF0]">
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div className="p-4 space-y-4">
+                            <p className="text-sm text-[#B8C0C1]">Provide details for the new patient list.</p>
+                            {doctorNames.length > 0 ? (
+                                <CustomSelect
+                                    id="doctor-name-select"
+                                    label="Doctor Name*"
+                                    options={doctorNames}
+                                    value={doctorName}
+                                    onChange={setDoctorName}
+                                />
+                            ) : (
+                                <div>
+                                    <label htmlFor="doctor-name" className="block text-sm font-medium text-[#B8C0C1] mb-1">Doctor Name*</label>
+                                    <input id="doctor-name" type="text" value={doctorName} onChange={(e) => setDoctorName(e.target.value)} className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]" />
+                                </div>
+                            )}
+                            {locationNames.length > 0 ? (
+                                <CustomSelect
+                                    id="location-select"
+                                    label="Location / Hospital*"
+                                    options={locationNames}
+                                    value={location}
+                                    onChange={setLocation}
+                                />
+                            ) : (
+                                <div>
+                                    <label htmlFor="location" className="block text-sm font-medium text-[#B8C0C1] mb-1">Location / Hospital*</label>
+                                    <input id="location" type="text" value={location} onChange={(e) => setLocation(e.target.value)} className="w-full bg-[#255356] border border-[#35686b] rounded-md px-3 py-2 text-[#EAEFF0] focus:ring-2 focus:ring-[#246364] focus:border-[#246364]" />
+                                </div>
+                            )}
+                        </div>
+                        <div className="p-4 bg-[#123133]/50 flex justify-end space-x-4 rounded-b-lg">
+                            <button onClick={onClose} className="px-4 py-2 bg-[#4a6566] hover:bg-[#3e5556] text-white font-semibold rounded-lg">Cancel</button>
+                            <button onClick={handleCreate} disabled={isCreateDisabled} className="px-4 py-2 bg-[#2F855A] hover:bg-[#276c4a] text-white font-semibold rounded-lg disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed">Create & Add</button>
                         </div>
                     </div>
                 </div>
@@ -635,7 +731,7 @@
                         aria-haspopup="listbox"
                         aria-expanded={isOpen}
                     >
-                        <span>{value}</span>
+                        <span className="truncate">{value}</span>
                         <DropdownArrowIcon isOpen={isOpen} />
                     </button>
                     {isOpen && (
@@ -747,7 +843,7 @@
             );
         };
 
-        const PatientAccordion = ({ patient, onUpdate, patientNumber }) => {
+        const PatientAccordion = ({ patient, onUpdate, patientNumber, isDeleteMode, onDeletePatient }) => {
             const [isOpen, setIsOpen] = React.useState(false);
             const accordionRef = React.useRef(null);
 
@@ -879,9 +975,19 @@
 
             return (
                 <div className="bg-[#184144] rounded-lg shadow-lg overflow-hidden">
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className={`w-full flex justify-between items-center p-4 text-left focus:outline-none transition-colors duration-200 ${patient.caution ? 'bg-red-400/40 hover:bg-red-400/50 focus:bg-red-400/40' : 'hover:bg-[#255356] focus:bg-[#255356]'}`}
+                    <div
+                        onClick={() => !isDeleteMode && setIsOpen(!isOpen)}
+                        role={!isDeleteMode ? "button" : undefined}
+                        tabIndex={!isDeleteMode ? 0 : -1}
+                        onKeyDown={(e) => {
+                            if (!isDeleteMode && (e.key === 'Enter' || e.key === ' ')) {
+                                e.preventDefault();
+                                setIsOpen(!isOpen);
+                            }
+                        }}
+                        className={`w-full flex justify-between items-center p-4 text-left focus:outline-none transition-colors duration-200 
+                            ${patient.caution ? 'bg-red-400/40 hover:bg-red-400/50 focus:bg-red-400/40' : 'hover:bg-[#255356] focus:bg-[#255356]'}
+                            ${isDeleteMode ? 'cursor-default' : 'cursor-pointer'}`}
                         aria-expanded={isOpen}
                         ref={accordionRef}
                     >
@@ -918,12 +1024,25 @@
                             </div>
                         </div>
                         <div className="flex items-center">
-                            {patient.previouslyDone && (
+                            {!isDeleteMode && patient.previouslyDone && (
                                 <span className="text-2xl text-[#48BB78] font-bold mr-2" title="Previously Done">*</span>
                             )}
-                            <ChevronDownIcon isOpen={isOpen} />
+                            {isDeleteMode ? (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeletePatient();
+                                    }}
+                                    className="p-2 rounded-full text-red-400 hover:bg-red-500/20"
+                                    aria-label={`Delete patient ${patient.name}`}
+                                >
+                                    <TrashIcon />
+                                </button>
+                            ) : (
+                                <ChevronDownIcon isOpen={isOpen} />
+                            )}
                         </div>
-                    </button>
+                    </div>
                     <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                         <div className="overflow-hidden">
                             <div className="p-4 border-t border-[#255356] space-y-4">
@@ -964,30 +1083,40 @@
                                                 name="caution"
                                                 checked={!!patient.caution}
                                                 onChange={handleInputChange}
-                                                className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
+                                                className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#F56565]"
                                             />
                                         </div>
                                         <div className="flex flex-col items-center">
                                             <label htmlFor={`penicillinAllergy-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1 h-10 flex items-center justify-center text-center">Penicillin Allergy</label>
-                                            <input
-                                                type="checkbox"
-                                                id={`penicillinAllergy-${patient.id}`}
-                                                name="penicillinAllergy"
-                                                checked={!!patient.penicillinAllergy}
-                                                onChange={handleInputChange}
-                                                className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
-                                            />
+                                            <div className="relative w-8 h-8">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`penicillinAllergy-${patient.id}`}
+                                                    name="penicillinAllergy"
+                                                    checked={!!patient.penicillinAllergy}
+                                                    onChange={handleInputChange}
+                                                    className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364]"
+                                                />
+                                                {!!patient.penicillinAllergy && (
+                                                    <span className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none select-none">💊</span>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="flex flex-col items-center">
                                             <label htmlFor={`previouslyDone-${patient.id}`} className="block text-sm font-medium text-[#B8C0C1] mb-1 h-10 flex items-center justify-center text-center">Previously Done</label>
-                                            <input
-                                                type="checkbox"
-                                                id={`previouslyDone-${patient.id}`}
-                                                name="previouslyDone"
-                                                checked={!!patient.previouslyDone}
-                                                onChange={handleInputChange}
-                                                className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364] checked:bg-[#246364] checked:bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.207%204.793a1%201%200%20010%201.414l-5%205a1%201%200%2001-1.414%200l-2-2a1%201%200%20011.414-1.414L6.5%209.086l4.293-4.293a1%201%200%20011.414%200z%22%2F%3E%3C%2Fsvg%3E')] checked:bg-center checked:bg-no-repeat"
-                                            />
+                                            <div className="relative w-8 h-8">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`previouslyDone-${patient.id}`}
+                                                    name="previouslyDone"
+                                                    checked={!!patient.previouslyDone}
+                                                    onChange={handleInputChange}
+                                                    className="appearance-none h-8 w-8 bg-[#255356] border border-[#35686b] rounded-md cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#184144] focus:ring-[#246364]"
+                                                />
+                                                {!!patient.previouslyDone && (
+                                                    <span className="absolute inset-0 flex items-center justify-center text-3xl leading-none font-bold text-[#48BB78] pointer-events-none select-none">*</span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1342,6 +1471,8 @@
 
             const [view, setView] = useState('main'); // 'main' or 'stats'
             const [isStatsEditing, setIsStatsEditing] = useState(false);
+            const [isDeleteMode, setIsDeleteMode] = useState(false);
+            const [patientToDelete, setPatientToDelete] = useState(null);
 
             const [allPatientData, setAllPatientData] = useState(() => {
                 try {
@@ -1368,6 +1499,7 @@
                 }
             });
             
+            const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
             const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
             const [isSelectListModalOpen, setIsSelectListModalOpen] = useState(false);
             const [targetListIndex, setTargetListIndex] = useState(null);
@@ -1563,19 +1695,51 @@
             }, []);
             
             const handleOpenAddPatientFlow = () => {
-                if (allPatientData.length === 0) return;
-                if (allPatientData.length === 1) {
+                if (allPatientData.length === 0) {
+                    setIsCreateListModalOpen(true);
+                } else if (allPatientData.length === 1) {
                     setTargetListIndex(0);
                     setIsAddPatientModalOpen(true);
                 } else {
                     setIsSelectListModalOpen(true);
                 }
             };
+            
+            const handleCreateNewList = ({ doctorName, location }) => {
+                const newSection = {
+                    id: `section-${Date.now()}-${Math.random()}`,
+                    sectionHeader: `${doctorName.trim()}, ${location.trim()}`,
+                    doctorName: doctorName.trim(),
+                    hospitalName: location.trim(),
+                    date: new Date().toISOString().split('T')[0],
+                    patients: [],
+                };
+                
+                setAllPatientData(currentData => {
+                    const newData = [...currentData, newSection];
+                    setTargetListIndex(newData.length - 1);
+                    return newData;
+                });
+            
+                setIsCreateListModalOpen(false);
+                setIsAddPatientModalOpen(true);
+            };
 
             const handleListSelectedForAdd = (index) => {
                 setTargetListIndex(index);
                 setIsSelectListModalOpen(false);
                 setIsAddPatientModalOpen(true);
+            };
+            
+            const handleCreateNewFromSelect = () => {
+                setIsSelectListModalOpen(false);
+                setIsCreateListModalOpen(true);
+            };
+            
+            const handleChangeListFromAdd = () => {
+                setIsAddPatientModalOpen(false);
+                setTargetListIndex(null);
+                setIsCreateListModalOpen(true);
             };
 
             const handleAddNewPatient = ({ name, age, procedure }) => {
@@ -1633,6 +1797,21 @@
                 setSelectionsToDelete({});
             };
             
+            const handleOpenDeleteConfirm = (patient) => {
+                setPatientToDelete(patient);
+            };
+
+            const handleConfirmDeletion = () => {
+                if (!patientToDelete) return;
+                setAllPatientData(currentData =>
+                    currentData.map(section => ({
+                        ...section,
+                        patients: section.patients.filter(p => p.id !== patientToDelete.id)
+                    }))
+                );
+                setPatientToDelete(null); // Close modal and clear patient
+            };
+            
             const triggerFileInput = () => {
                 fileInputRef.current?.click();
             };
@@ -1646,10 +1825,13 @@
             return (
                 <div className="min-h-screen bg-[#003638] text-[#EAEFF0] font-sans">
                     <div className="max-w-md mx-auto p-4">
-                         <header className="py-4 relative">
-                            <img src="cropped.png" alt="Pain app logo" className="mx-auto w-48 h-48" width="192" height="192" />
-                            <button onClick={() => setView('stats')} className="absolute top-4 right-0 p-2 text-white hover:text-[#66d1cc] rounded-md hover:bg-[#255356]" aria-label="Open Statistics">
-                                <BurgerMenuIcon />
+                         <header className="py-4">
+                            <button
+                                onClick={() => setView('stats')}
+                                className="block mx-auto p-0 border-0 bg-transparent cursor-pointer rounded-full focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-[#003638] focus:ring-[#246364] transition-transform transform hover:scale-105"
+                                aria-label="Open Statistics"
+                            >
+                                <img src="cropped.png" alt="Pain app logo" className="w-48 h-48" width="192" height="192" />
                             </button>
                         </header>
 
@@ -1660,12 +1842,12 @@
                             {!isLoading && allPatientData.length === 0 && !error && (
                                 <div className="text-center text-[#B8C0C1] mt-16 p-6 bg-[#184144] rounded-lg">
                                     <p className="text-xl">Welcome!</p>
-                                    <p>Click "Import" to load patient data.</p>
+                                    <p>Click "Import" to load patient data or "+" to create a new list.</p>
                                 </div>
                             )}
 
                             {allPatientData.map((patientData, index) => {
-                                if (patientData.patients.length === 0) {
+                                if (patientData.patients.length === 0 && allPatientData.length > 1) {
                                     return null;
                                 }
                                 
@@ -1689,6 +1871,8 @@
                                                     patient={patient}
                                                     patientNumber={startingIndex + patientIndex + 1}
                                                     onUpdate={handlePatientUpdate}
+                                                    isDeleteMode={isDeleteMode}
+                                                    onDeletePatient={() => handleOpenDeleteConfirm(patient)}
                                                 />
                                             ))}
                                         </div>
@@ -1700,9 +1884,16 @@
                         <footer className="mt-8 pt-6 border-t border-[#255356]">
                             <div className="flex justify-center space-x-2 flex-wrap gap-2">
                                 <button
+                                    onClick={() => setIsDeleteMode(prev => !prev)}
+                                    className={`flex items-center justify-center px-4 py-3 font-semibold rounded-lg shadow-md transition-all transform hover:scale-105 ${isDeleteMode ? 'bg-[#C53030] hover:bg-[#E53E3E]' : 'bg-[#4a6566] hover:bg-[#3e5556]'} text-white`}
+                                    aria-label="Toggle patient delete mode"
+                                >
+                                    <MinusIcon />
+                                    <span className="ml-2 hidden sm:inline">Delete</span>
+                                </button>
+                                <button
                                     onClick={handleOpenAddPatientFlow}
-                                    disabled={allPatientData.length === 0}
-                                    className="flex items-center justify-center px-4 py-3 bg-[#6B46C1] hover:bg-[#553C9A] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 disabled:bg-[#4a6566] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                    className="flex items-center justify-center px-4 py-3 bg-[#6B46C1] hover:bg-[#553C9A] text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
                                     aria-label="Add new patient"
                                 >
                                     <PlusIcon />
@@ -1772,11 +1963,27 @@
                             onClose={() => setIsConfirmModalOpen(false)}
                         />
                     )}
+                    {patientToDelete && (
+                        <ConfirmModal
+                            title="Confirm Patient Deletion"
+                            message={`Are you sure you want to permanently delete "${patientToDelete.name}"? This action cannot be undone.`}
+                            onConfirm={handleConfirmDeletion}
+                            onClose={() => setPatientToDelete(null)}
+                        />
+                    )}
                     {isSelectListModalOpen && (
                         <SelectListModal
                             sections={allPatientData}
                             onSelect={handleListSelectedForAdd}
                             onClose={() => setIsSelectListModalOpen(false)}
+                            onCreateNew={handleCreateNewFromSelect}
+                        />
+                    )}
+                    {isCreateListModalOpen && (
+                        <CreateListModal
+                            onCreate={handleCreateNewList}
+                            onClose={() => setIsCreateListModalOpen(false)}
+                            stats={statsData}
                         />
                     )}
                     {isAddPatientModalOpen && targetListIndex !== null && (
@@ -1787,6 +1994,7 @@
                                 setIsAddPatientModalOpen(false);
                                 setTargetListIndex(null);
                             }}
+                            onChangeList={handleChangeListFromAdd}
                         />
                     )}
                 </div>
